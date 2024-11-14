@@ -19,7 +19,7 @@ export default function Header() {
       {/* Right Section: Profile Image and Modal */}
       <div className="flex items-center space-x-4 relative">
         <div className="relative">
-          <img
+          <image
             src={user?.profile_image_url || "/profile.png"}
             alt="Profile"
             onClick={() => setIsModalOpen((prev) => !prev)}

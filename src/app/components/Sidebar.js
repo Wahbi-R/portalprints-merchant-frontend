@@ -73,7 +73,7 @@ export default function Sidebar() {
         )}
         <div className="mb-6 flex items-center">
           {/* Add your custom logo image */}
-          <img src="/logo512.png" alt="Portal Logo" className="h-8 w-8 mr-3" />
+          <image src="/logo512.png" alt="Portal Logo" className="h-8 w-8 mr-3" />
           {!isMobile || isVisible ? (
             <Link href="/" className="text-2xl font-bold">
               PortalPrints
