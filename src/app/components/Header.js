@@ -1,4 +1,4 @@
-"use client"; // Ensure Header is a client-only component
+"use client";
 
 import { useUserData } from '@/hooks/useUserData';
 import { logOut } from '@/lib/auth';
@@ -31,7 +31,7 @@ export default function Header() {
           />
           {isModalOpen && (
             <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg p-4 border border-gray-200">
-              <p className="text-gray-700 text-sm">{user?.username || user?.email}</p>
+              <div className="text-gray-700 text-sm">{user?.username || user?.email}</div>
               <button
                 onClick={handleSignOut}
                 className="mt-2 text-sm text-red-600 hover:text-red-800"

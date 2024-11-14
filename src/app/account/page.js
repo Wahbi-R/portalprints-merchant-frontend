@@ -4,6 +4,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
+import Image from "next/image";
 
 export default function AccountPage() {
     const router = useRouter();
@@ -41,7 +42,10 @@ export default function AccountPage() {
                         <Image
                             src="/profile.png"
                             alt="Profile"
-                            className="h-auto w-auto rounded-full border border-gray-300"
+                            className="h-auto w-full rounded-full border border-gray-300"
+                            width={0}
+                            height={0}
+                            sizes="100vw" style={{ width: '100%', height: 'auto' }}
                         />
                         <blockquote className="text-lg italic text-gray-200 ms-2">
                             “Printing is poggers.”

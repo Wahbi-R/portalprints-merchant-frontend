@@ -6,9 +6,16 @@ import StoreConnectionCard from '../components/StoreConnectionCard';
 import WinnersSection from '../components/WinningItemsSection';
 import IntegrationSuggestions from '../components/IntegrationsProfile';
 import { useUserData } from '@/hooks/useUserData';
+import { useEffect, useState } from 'react';
 
 export default function SettingsPage() {
-  const { user } = useUserData(); 
+  const { user, isLoading } = useUserData();
+  const [isClient, setIsClient] = useState(false);
+
+  // Set `isClient` to true after component mounts on the client
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-gray-900 w-full h-full">
@@ -26,7 +33,7 @@ export default function SettingsPage() {
       <div className="flex flex-col space-y-6">
         <div className="flex flex-col items-center space-y-4 p-4 bg-gray-800 rounded-2xl">
           <h2 className="text-white font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
-            {user?.username || user?.email || "Name"}
+            {isClient && !isLoading ? (user?.username || user?.email) : "Name"} {/* Display "Name" until client data is available */}
           </h2>
           <div className="flex space-x-2 justify-center">
             <StoreConnectionCard label="Connected Store 1" />
