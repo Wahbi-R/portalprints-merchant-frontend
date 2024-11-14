@@ -2,6 +2,7 @@
 
 import { useUserData } from '@/hooks/useUserData';
 import { logOut } from '@/lib/auth';
+import Image from 'next/image';
 import { useState } from 'react';
 
 export default function Header() {
@@ -23,11 +24,14 @@ export default function Header() {
       {/* Right Section: Profile Image and Modal */}
       <div className="flex items-center space-x-4 relative">
         <div className="relative">
-          <img
+          <Image
             src={user?.profile_image_url || "/profile.png"}
             alt="Profile"
             onClick={() => setIsModalOpen((prev) => !prev)}
             className="h-8 w-8 rounded-full border border-gray-300 cursor-pointer"
+            width={20}
+            height={20}
+            
           />
           {isModalOpen && (
             <div className="absolute right-0 mt-2 w-40 bg-white rounded-lg shadow-lg p-4 border border-gray-200">
