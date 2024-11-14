@@ -38,7 +38,7 @@ export default function AccountPage() {
                         <h2 className="text-2xl font-bold">What our Clients Said:</h2>
                     </div>
                     <div>
-                        <image
+                        <Image
                             src="/profile.png"
                             alt="Profile"
                             className="h-auto w-auto rounded-full border border-gray-300"

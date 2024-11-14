@@ -1,10 +1,14 @@
+"use client"; // Ensure Header is a client-only component
+
 import { useUserData } from '@/hooks/useUserData';
 import { logOut } from '@/lib/auth';
 import { useState } from 'react';
 
 export default function Header() {
-  const { user } = useUserData();
+  const { user, isLoading } = useUserData();
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  if (isLoading) return null; // Show nothing during loading to prevent mismatches
 
   const handleSignOut = async () => {
     await logOut();
@@ -19,7 +23,7 @@ export default function Header() {
       {/* Right Section: Profile Image and Modal */}
       <div className="flex items-center space-x-4 relative">
         <div className="relative">
-          <image
+          <img
             src={user?.profile_image_url || "/profile.png"}
             alt="Profile"
             onClick={() => setIsModalOpen((prev) => !prev)}

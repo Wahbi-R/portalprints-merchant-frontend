@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 // Import specific icons from Heroicons
 import { HomeIcon, UserGroupIcon, ClipboardDocumentListIcon, Cog8ToothIcon, ChevronLeftIcon, Bars3Icon, InboxStackIcon } from '@heroicons/react/24/outline';
+import Image from 'next/image';
 
 export default function Sidebar() {
   const pathname = usePathname();
@@ -73,7 +74,7 @@ export default function Sidebar() {
         )}
         <div className="mb-6 flex items-center">
           {/* Add your custom logo image */}
-          <image src="/logo512.png" alt="Portal Logo" className="h-8 w-8 mr-3" />
+          <img src="/logo512.png" alt="Portal Logo" className="h-8 w-8 mr-3" />
           {!isMobile || isVisible ? (
             <Link href="/" className="text-2xl font-bold">
               PortalPrints

@@ -19,8 +19,10 @@ export const signInWithGoogle = async () => {
 
 export const logOut = async () => {
   signOut(auth).then(() => {
-    // Clear user data from localStorage
+    if (typeof window !== 'undefined') {
+          // Clear user data from localStorage
     localStorage.removeItem('cachedUserData');
+    }
 
     // Clear SWR cache for user data
     mutate(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, null, { revalidate: false });

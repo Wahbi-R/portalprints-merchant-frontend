@@ -2,8 +2,8 @@ import Image from 'next/image';
 
 export default function WinnersSection() {
   const winners = [
-    { name: "Flower Pot", price: "$1,000", image: "/flower_pot.png" },
-    { name: "Flower Pot", price: "$1,000", image: "/flower_pot.png" },
+    { name: "Flower Pot", price: "$1,000", image: "/profile.png" },
+    { name: "Flower Pot", price: "$1,000", image: "/profile.png" },
     // Add more winner items here
   ];
 
