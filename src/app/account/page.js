@@ -46,7 +46,7 @@ export default function AccountPage() {
                         <blockquote className="text-lg italic text-gray-200 ms-2">
                             “Printing is poggers.”
                         </blockquote>
-                        <p className="text-xl font-bold text-gray-300 ms-2">Sala's Mom</p>
+                        <p className="text-xl font-bold text-gray-300 ms-2">Sala&apos;s Mom</p>
                         <p className="text-sm text-gray-300 ms-2">Product Designer & Seller @ Arieze</p>
                     </div>
                     <div className="bg-white p-6 rounded-3xl text-black">
