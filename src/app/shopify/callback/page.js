@@ -2,43 +2,40 @@
 /* eslint-disable react/no-unescaped-entities */
 
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect } from "react";
-import { saveStoreData } from "@/hooks/useSaveStoreData"; // Import saveStoreData function
+import { useEffect, useCallback } from "react";
+import { saveStoreData } from "@/hooks/useSaveStoreData";
 
 export default function ShopifyCallback() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  // Handle the Shopify callback logic
-  const handleShopifyCallback = async ({ shop, code, state }) => {
-    try {
-      // Step 1: Parse the state parameter
-      const parsedState = parseState(state);
-      if (!parsedState || !parsedState.uid) {
-        throw new Error("Invalid state parameter.");
+
+  const handleShopifyCallback = useCallback(
+    async ({ shop, code, state }) => {
+      try {
+        const parsedState = parseState(state);
+        if (!parsedState || !parsedState.uid) {
+          throw new Error("Invalid state parameter.");
+        }
+
+        const { uid } = parsedState;
+        const accessToken = await exchangeCodeForAccessToken(shop, code);
+
+        await saveStoreData({
+          storeDomain: shop,
+          storeName: "Unknown Store",
+          storeAccessToken: accessToken,
+        });
+
+        router.push("/settings");
+      } catch (error) {
+        console.error("Error handling Shopify callback:", error);
+        alert("An error occurred during the setup process. Please try again.");
       }
+    },
+    [router]
+  );
 
-      const { uid } = parsedState;
-
-      // Step 2: Exchange the authorization code for an access token
-      const accessToken = await exchangeCodeForAccessToken(shop, code);
-
-      // Step 3: Save the store data
-      await saveStoreData({
-        storeDomain: shop,
-        storeName: "Unknown Store", // Replace this with a call to get the store name if needed
-        storeAccessToken: accessToken,
-      });
-
-      // Step 4: Redirect to the /settings page
-      router.push("/settings");
-    } catch (error) {
-      console.error("Error handling Shopify callback:", error);
-      alert("An error occurred during the setup process. Please try again.");
-    }
-  };
-  
   useEffect(() => {
-    // Extract parameters from the query string
     const shop = searchParams.get("shop");
     const code = searchParams.get("code");
     const state = searchParams.get("state");
@@ -50,8 +47,7 @@ export default function ShopifyCallback() {
     }
 
     handleShopifyCallback({ shop, code, state });
-  }, [searchParams, router]);
-
+  }, [searchParams, handleShopifyCallback]);
 
   return (
     <div>

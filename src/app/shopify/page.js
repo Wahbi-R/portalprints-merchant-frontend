@@ -30,7 +30,7 @@ export default function ShopifyPage() {
   return (
     <div>
       <h1>Setting Up Shopify Integration...</h1>
-      <p>Please wait while we redirect you to Shopify's authentication page.</p>
+      <p>Please wait while we redirect you to Shopify&apos;s authentication page.</p>
     </div>
   );
 }
