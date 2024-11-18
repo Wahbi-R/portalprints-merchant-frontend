@@ -6,15 +6,17 @@ import StoreConnectionCard from '../components/StoreConnectionCard';
 import WinnersSection from '../components/WinningItemsSection';
 import IntegrationSuggestions from '../components/IntegrationsProfile';
 import { useUserData } from '@/hooks/useUserData';
+import { useStoreData } from '@/hooks/useStoreData'; // Hook to fetch and manage store data
 import { useEffect, useState } from 'react';
+import AddStoreButton from '../components/AddStoreButton';
 
 export default function SettingsPage() {
   const { user, isLoading } = useUserData();
+  const { storeData, isLoading: isStoreLoading, refreshStoreData } = useStoreData(); // Fetch store data
   const [isClient, setIsClient] = useState(false);
 
-  // Set `isClient` to true after component mounts on the client
   useEffect(() => {
-    setIsClient(true);
+    setIsClient(true); // Ensure this component renders client-side
   }, []);
 
   return (
@@ -35,10 +37,21 @@ export default function SettingsPage() {
           <h2 className="text-white font-bold text-2xl sm:text-3xl md:text-4xl lg:text-5xl">
             {isClient && !isLoading ? (user?.username || user?.email) : "Name"} {/* Display "Name" until client data is available */}
           </h2>
-          <div className="flex space-x-2 justify-center">
-            <StoreConnectionCard label="Connected Store 1" />
-            <StoreConnectionCard label="Connected Store 2" />
+
+          {/* Store Connection Section */}
+          <div className="flex items-center space-x-2">
+            {!isStoreLoading && storeData.length === 0 ? (
+              <p className="text-gray-400">No connected stores. Add one to get started!</p> // Empty state message
+            ) : (
+              storeData.map((store) => (
+                <StoreConnectionCard key={store.store_id} label={store.store_name} />
+              ))
+            )}
+
+            {/* Add Store Button */}
+            <AddStoreButton onStoreAdded={refreshStoreData} /> {/* Refresh store data after adding */}
           </div>
+
           <h3 className="text-white text-xl font-bold mt-4">7 Day Winners</h3>
           <WinnersSection />
         </div>
