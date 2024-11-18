@@ -1,5 +1,7 @@
 "use client"; // Required to use hooks like useEffect
 
+export const dynamic = "force-dynamic";
+
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth"; // Firebase auth
