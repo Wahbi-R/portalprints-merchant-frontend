@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable react/no-unescaped-entities */
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -7,22 +8,6 @@ import { saveStoreData } from "@/hooks/useSaveStoreData"; // Import saveStoreDat
 export default function ShopifyCallback() {
   const searchParams = useSearchParams();
   const router = useRouter();
-
-  useEffect(() => {
-    // Extract parameters from the query string
-    const shop = searchParams.get("shop");
-    const code = searchParams.get("code");
-    const state = searchParams.get("state");
-
-    if (!shop || !code || !state) {
-      console.error("Missing required parameters (shop, code, or state).");
-      alert("An error occurred. Please try again.");
-      return;
-    }
-
-    handleShopifyCallback({ shop, code, state });
-  }, [searchParams, router]);
-
   // Handle the Shopify callback logic
   const handleShopifyCallback = async ({ shop, code, state }) => {
     try {
@@ -51,6 +36,22 @@ export default function ShopifyCallback() {
       alert("An error occurred during the setup process. Please try again.");
     }
   };
+  
+  useEffect(() => {
+    // Extract parameters from the query string
+    const shop = searchParams.get("shop");
+    const code = searchParams.get("code");
+    const state = searchParams.get("state");
+
+    if (!shop || !code || !state) {
+      console.error("Missing required parameters (shop, code, or state).");
+      alert("An error occurred. Please try again.");
+      return;
+    }
+
+    handleShopifyCallback({ shop, code, state });
+  }, [searchParams, router]);
+
 
   return (
     <div>

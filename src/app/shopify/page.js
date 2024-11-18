@@ -11,11 +11,6 @@ export default function ShopifyPage() {
   useEffect(() => {
     // Extract `shop` from query parameters
     const shop = searchParams.get("shop");
-    if (!shop || !shop.includes(".myshopify.com")) {
-      alert("Invalid or missing Shopify store domain.");
-      console.error("Invalid or missing `shop` parameter in the URL.");
-      return;
-    }
 
     // Authenticate with Firebase and redirect to Shopify OAuth
     onAuthStateChanged(auth, (user) => {
@@ -43,7 +38,7 @@ export default function ShopifyPage() {
 // Helper function to build the Shopify OAuth URL
 function buildShopifyOAuthUrl(shop, uid) {
   const clientId = process.env.NEXT_PUBLIC_SHOPIFY_APP_API_ID;
-  const redirectUri = "http://localhost:3000/shopify/callback"; // e.g., "https://merchant.portalprints.com/shopify/callback"
+  const redirectUri = "https://merchant.portalprints.com/shopify/callback"; // e.g., "https://merchant.portalprints.com/shopify/callback"
   const scopes = "read_products,write_products,read_orders,write_orders"; // Adjust scopes as needed
   const csrfToken = Math.random().toString(36).substring(2); // Generate a random CSRF token
 
