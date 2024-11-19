@@ -25,55 +25,55 @@ export default function ShopifyCallbackPage() {
       return;
     }
 
+    const handleShopifyCallback = async ({ shop, code }) => {
+      try {
+        const user = await new Promise((resolve, reject) => {
+          const unsubscribe = auth.onAuthStateChanged((user) => {
+            if (user) {
+              unsubscribe();
+              resolve(user);
+            } else {
+              unsubscribe();
+              reject(new Error("User is not authenticated."));
+            }
+          });
+        });
+
+        const uid = user.uid;
+        const token = await user.getIdToken();
+
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shopify/exchange-token`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ shop, code, uid }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to exchange token.");
+        }
+
+        const responseData = await response.json();
+
+        if (responseData.message === "Store already exists.") {
+          console.log("Store already exists:", responseData.store);
+          alert("This store is already connected.");
+        } else {
+          console.log("Store saved:", responseData);
+        }
+
+        // Redirect to /settings
+        router.push("/settings");
+      } catch (error) {
+        console.error("Error handling Shopify callback:", error);
+        alert("An error occurred during the setup process. Please try again.");
+      }
+    };
+
     handleShopifyCallback({ shop, code });
   }, [searchParams, router]);
-
-  const handleShopifyCallback = async ({ shop, code }) => {
-    try {
-      const user = await new Promise((resolve, reject) => {
-        const unsubscribe = auth.onAuthStateChanged((user) => {
-          if (user) {
-            unsubscribe();
-            resolve(user);
-          } else {
-            unsubscribe();
-            reject(new Error("User is not authenticated."));
-          }
-        });
-      });
-  
-      const uid = user.uid;
-      const token = await user.getIdToken();
-  
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shopify/exchange-token`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ shop, code, uid }),
-      });
-  
-      if (!response.ok) {
-        throw new Error("Failed to exchange token.");
-      }
-  
-      const responseData = await response.json();
-  
-      if (responseData.message === "Store already exists.") {
-        console.log("Store already exists:", responseData.store);
-        alert("This store is already connected.");
-      } else {
-        console.log("Store saved:", responseData);
-      }
-  
-      // Redirect to /settings
-      router.push("/settings");
-    } catch (error) {
-      console.error("Error handling Shopify callback:", error);
-      alert("An error occurred during the setup process. Please try again.");
-    }
-  };
 
   return (
     <div>

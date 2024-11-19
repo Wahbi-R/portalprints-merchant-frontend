@@ -1,5 +1,7 @@
 "use client";
 
+export const dynamic = "force-dynamic"; // Prevent pre-rendering
+
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
@@ -31,7 +33,7 @@ export default function ShopifyPage() {
 // Helper to build the Shopify OAuth URL
 function buildShopifyOAuthUrl(shop) {
   const clientId = process.env.NEXT_PUBLIC_SHOPIFY_APP_API_ID;
-  const redirectUri = `https://merchants.portalprints.com/shopify/callback`; // Update with your base URL
+  const redirectUri = `https://merchant.portalprints.com/shopify/callback`; // Update with your base URL
   const scopes = "read_products,write_products,read_orders,write_orders"; // Adjust based on your needs
 
   return `https://${shop}/admin/oauth/authorize?client_id=${clientId}&scope=${scopes}&redirect_uri=${encodeURIComponent(redirectUri)}`;
