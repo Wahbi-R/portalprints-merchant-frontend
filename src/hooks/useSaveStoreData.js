@@ -1,26 +1,53 @@
-import { auth } from '@/lib/firebase';
+import { auth } from "@/lib/firebase";
 
-// Wants user-id, store name, store_domain
+// Save store data or handle existing store
 export async function saveStoreData(storeData) {
-    const token = await auth.currentUser.getIdToken(); // Get Firebase ID token
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stores/saveStore`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`, // Send token in Authorization header
-        },
-        body: JSON.stringify({ userId: auth.currentUser.uid, store_domain: storeData.storeDomain, store_name: storeData.storeName, store_access_key: storeData.storeAccessToken }),
+  try {
+    // Wait for the user to be authenticated
+    const user = await new Promise((resolve, reject) => {
+      const unsubscribe = auth.onAuthStateChanged((user) => {
+        if (user) {
+          unsubscribe();
+          resolve(user);
+        } else {
+          unsubscribe();
+          reject(new Error("User is not authenticated."));
+        }
       });
-  
-      if (!response.ok) {
-        throw new Error('Failed to save store data:', response);
-      }
-  
-      return await response.json();
-    } catch (error) {
-      console.error('Error in saveStoreData:', error);
-      throw error;
+    });
+
+    // Get the ID token for the authenticated user
+    const token = await user.getIdToken();
+
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/stores/saveStore`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Send token in Authorization header
+      },
+      body: JSON.stringify({
+        userId: user.uid, // Use authenticated user's UID
+        store_domain: storeData.storeDomain,
+        store_name: storeData.storeName, // This can be `null` or a value
+        store_access_key: storeData.storeAccessToken,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to save store data: ${response.statusText}`);
     }
+
+    const responseData = await response.json();
+
+    if (responseData.message === "Store already exists.") {
+      console.log("Store already exists:", responseData.store);
+      return { exists: true, store: responseData.store }; // Return info about the existing store
+    }
+
+    console.log("New store saved:", responseData);
+    return { exists: false, store: responseData }; // Return the new store data
+  } catch (error) {
+    console.error("Error in saveStoreData:", error.message);
+    throw error;
   }
-  
+}
