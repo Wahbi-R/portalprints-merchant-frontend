@@ -14,7 +14,6 @@ export default function Sidebar() {
   const [animationCompleted, setAnimationCompleted] = useState(true);
 
   const navItems = [
-    { name: 'Home', path: '/', icon: HomeIcon },
     { name: 'Orders', path: '/orders', icon: ClipboardDocumentListIcon },
     { name: 'Products', path: '/product', icon: InboxStackIcon },
     // Add more items as needed

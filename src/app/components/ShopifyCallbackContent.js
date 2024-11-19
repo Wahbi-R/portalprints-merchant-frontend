@@ -7,13 +7,13 @@ import { saveStoreData } from "@/hooks/useSaveStoreData";
 export default function ShopifyCallbackContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-
   useEffect(() => {
-    // Extract query parameters
     const shop = searchParams.get("shop");
     const code = searchParams.get("code");
     const state = searchParams.get("state");
-
+    console.log("Shop:", shop);
+    console.log("Code:", code);
+    console.log("State:", state);
     if (!shop || !code || !state) {
       console.error("Missing required parameters (shop, code, or state).");
       alert("An error occurred. Please try again.");
@@ -25,15 +25,17 @@ export default function ShopifyCallbackContent() {
 
   const handleShopifyCallback = async ({ shop, code, state }) => {
     try {
-      const parsedState = parseState(state);
-      if (!parsedState || !parsedState.uid) {
-        throw new Error("Invalid state parameter.");
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shopify/exchange-token`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ shop, code }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to exchange token.");
       }
 
-      const { uid } = parsedState;
-
-      // Exchange the authorization code for an access token
-      const accessToken = await exchangeCodeForAccessToken(shop, code);
+      const { accessToken } = await response.json();
 
       // Save the store data
       await saveStoreData({
@@ -56,44 +58,4 @@ export default function ShopifyCallbackContent() {
       <p>Please wait while we complete the setup process.</p>
     </div>
   );
-}
-
-// Helper: Parse the state parameter safely
-function parseState(state) {
-  try {
-    return JSON.parse(state);
-  } catch (error) {
-    console.error("Error parsing state parameter:", error);
-    return null;
-  }
-}
-
-// Helper: Exchange the authorization code for an access token
-async function exchangeCodeForAccessToken(shop, code) {
-  const clientId = process.env.NEXT_PUBLIC_SHOPIFY_APP_API_ID;
-  const clientSecret = process.env.NEXT_PUBLIC_SHOPIFY_CLIENT_SECRET;
-
-  try {
-    const response = await fetch(`https://${shop}/admin/oauth/access_token`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        client_id: clientId,
-        client_secret: clientSecret,
-        code,
-      }),
-    });
-
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("Failed to exchange token:", errorData);
-      throw new Error(errorData.error || "Failed to exchange token.");
-    }
-
-    const { access_token } = await response.json();
-    return access_token;
-  } catch (error) {
-    console.error("Error exchanging code for access token:", error);
-    throw error;
-  }
 }

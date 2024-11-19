@@ -44,7 +44,7 @@ export default function SettingsPage() {
               <p className="text-gray-400">No connected stores. Add one to get started!</p> // Empty state message
             ) : (
               storeData.map((store) => (
-                <StoreConnectionCard key={store.store_id} label={store.store_name} />
+                <StoreConnectionCard key={store.store_id} label={store.store_name || store.store_domain} />
               ))
             )}
 
