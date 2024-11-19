@@ -4,6 +4,7 @@ export const dynamic = "force-dynamic"; // Prevent pre-rendering
 
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
+import { auth } from "@/lib/firebase";
 
 export default function ShopifyPage() {
   const searchParams = useSearchParams();
@@ -17,9 +18,19 @@ export default function ShopifyPage() {
       return;
     }
 
-    // Redirect to Shopify OAuth
-    const oauthUrl = buildShopifyOAuthUrl(shop);
-    window.location.href = oauthUrl;
+    // Check Firebase authentication state
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        console.log("User is authenticated:", user.email);
+
+        // Redirect to Shopify OAuth
+        const oauthUrl = buildShopifyOAuthUrl(shop);
+        window.location.href = oauthUrl;
+      }
+    });
+
+    // Cleanup the listener on component unmount
+    return () => unsubscribe();
   }, [searchParams]);
 
   return (
