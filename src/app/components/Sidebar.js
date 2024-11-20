@@ -75,8 +75,8 @@ export default function Sidebar() {
           {/* Add your custom logo image */}
           <Image src="/logo512.png" alt="Portal Logo" className="h-8 w-8 mr-3" width={32} height={32} />
           {!isMobile || isVisible ? (
-            <Link href="/" className="text-2xl font-bold">
-              PortalPrints
+            <Link href="/" className="text-3xl font-bold">
+              Portal
             </Link>
           ) : null}
         </div>

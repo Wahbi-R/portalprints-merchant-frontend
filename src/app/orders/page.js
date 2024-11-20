@@ -4,16 +4,7 @@ import { useState, useEffect } from "react";
 import StatusTabs from "../components/StatusTabs";
 import OrderTable from "../components/OrderTable";
 import SearchBar from "../components/SearchBar";
-
-// Mock data function (replace with actual data fetching)
-const fetchOrders = async (status) => {
-  const data = [
-    { id: "ORD001", customer: "John Doe", date: "2024-11-08", status: "Printing", total: "$150", paymentStatus: "Pending", items: 3, deliveryMethod: "Free Shipping" },
-    { id: "ORD002", customer: "Jane Smith", date: "2024-11-07", total: "$200", paymentStatus: "Completed", items: 2, deliveryMethod: "Express", status: "Delivered" },
-    // Add more sample orders
-  ];
-  return status === "All" ? data : data.filter(order => order.status === status);
-};
+import { fetchOrders } from "@/hooks/useOrdersData";
 
 export default function OrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -22,12 +13,23 @@ export default function OrdersPage() {
 
   useEffect(() => {
     const loadOrders = async () => {
-      const fetchedOrders = await fetchOrders(status);
-      setOrders(fetchedOrders);
-      setFilteredOrders(fetchedOrders); // Initialize filtered orders
+      try {
+        const fetchedOrders = await fetchOrders(); // Use the provided fetchOrders function
+        setOrders(fetchedOrders);
+        setFilteredOrders(fetchedOrders); // Initialize filtered orders
+      } catch (error) {
+        console.error("Error fetching orders:", error.message);
+      }
     };
+
     loadOrders();
-  }, [status]);
+  }, []);
+
+  useEffect(() => {
+    // Filter orders when status changes
+    const filtered = status === "All" ? orders : orders.filter((order) => order.status === status);
+    setFilteredOrders(filtered);
+  }, [status, orders]);
 
   const handleStatusChange = (newStatus) => {
     setStatus(newStatus);
@@ -35,9 +37,10 @@ export default function OrdersPage() {
 
   const handleSearch = (searchTerm) => {
     // Filter orders based on the search term
-    const filtered = orders.filter(order =>
-      order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.id.toLowerCase().includes(searchTerm.toLowerCase())
+    const filtered = orders.filter(
+      (order) =>
+        order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        order.id.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredOrders(filtered);
   };

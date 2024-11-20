@@ -6,13 +6,13 @@ import StoreConnectionCard from '../components/StoreConnectionCard';
 import WinnersSection from '../components/WinningItemsSection';
 import IntegrationSuggestions from '../components/IntegrationsProfile';
 import { useUserData } from '@/hooks/useUserData';
-import { useStoreData } from '@/hooks/useStoreData'; // Hook to fetch and manage store data
+import { useStoreDataNew } from '@/hooks/useStoreData'; // Hook to fetch and manage store data
 import { useEffect, useState } from 'react';
 import AddStoreButton from '../components/AddStoreButton';
 
 export default function SettingsPage() {
   const { user, isLoading } = useUserData();
-  const { storeData, isLoading: isStoreLoading, refreshStoreData } = useStoreData(); // Fetch store data
+  const { storeData, isLoading: isStoreLoading, refreshStoreData } = useStoreDataNew(); // Fetch store data
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -49,7 +49,7 @@ export default function SettingsPage() {
             )}
 
             {/* Add Store Button */}
-            <AddStoreButton onStoreAdded={refreshStoreData} /> {/* Refresh store data after adding */}
+            {/* <AddStoreButton onStoreAdded={refreshStoreData} /> Refresh store data after adding */}
           </div>
 
           <h3 className="text-white text-xl font-bold mt-4">7 Day Winners</h3>
