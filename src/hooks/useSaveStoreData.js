@@ -40,11 +40,9 @@ export async function saveStoreData(storeData) {
     const responseData = await response.json();
 
     if (responseData.message === "Store already exists.") {
-      console.log("Store already exists:", responseData.store);
       return { exists: true, store: responseData.store }; // Return info about the existing store
     }
 
-    console.log("New store saved:", responseData);
     return { exists: false, store: responseData }; // Return the new store data
   } catch (error) {
     console.error("Error in saveStoreData:", error.message);

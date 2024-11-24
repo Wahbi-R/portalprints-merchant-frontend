@@ -1,48 +1,39 @@
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
 import { auth } from "@/lib/firebase";
-import { useStoreData, useStoreDataNew } from "./useStoreData";
 
-export async function fetchOrders() {
-  try {
-    // Ensure the user is authenticated
-    const user = await new Promise((resolve, reject) => {
-      const unsubscribe = auth.onAuthStateChanged((user) => {
-        if (user) {
-          unsubscribe();
-          resolve(user);
-        } else {
-          unsubscribe();
-          reject(new Error("User is not authenticated."));
-        }
-      });
+export async function fetchOrders(storeDomain) {
+  const user = await new Promise((resolve, reject) => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (user) {
+        unsubscribe(); // Cleanup the listener
+        resolve(user);
+      } else {
+        console.log("Waiting for authentication...");
+      }
     });
 
-    // Get the Firebase ID token
-    const token = await user.getIdToken();
+    // Set timeout to avoid infinite waiting in edge cases
+    setTimeout(() => reject(new Error("Authentication timeout")), 10000);
+  });
 
-    // Get the store URL
-    const storeDomain = "wabbleton.myshopify.com"
-    // Construct the URL with query parameters
-    const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`);
-    url.searchParams.append("uid", user.uid);
-    url.searchParams.append("storeDomain", storeDomain);
-    console.log(url)
-    // Make the GET request
-    const response = await fetch(url.toString(), {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Include token in Authorization header
-      },
-    });
+  const token = await user.getIdToken();
+  const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`);
+  url.searchParams.append("uid", user.uid);
+  url.searchParams.append("storeDomain", storeDomain);
 
-    if (!response.ok) {
-      throw new Error(`Failed to fetch orders: ${response.statusText}`);
-    }
-
-    // Parse and return the JSON response
-    return await response.json();
-  } catch (error) {
-    console.error("Error in fetchOrders:", error.message);
-    throw error;
+  const response = await fetch(url.toString(), {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  if (!response.ok) {
+    console.log("Error fetching order data.")
+    return []
   }
+
+  return response.json();
 }

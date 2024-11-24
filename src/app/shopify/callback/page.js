@@ -58,7 +58,6 @@ export default function ShopifyCallbackPage() {
         const responseData = await response.json();
 
         if (responseData.message === "Store already exists.") {
-          console.log("Store already exists:", responseData.store);
           alert("This store is already connected.");
         } else {
           console.log("Store saved:", responseData);

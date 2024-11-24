@@ -51,7 +51,6 @@ export default function SignIn() {
             await signInWithGoogle();
             const uid = auth.currentUser.uid;
             const email = auth.currentUser.email;
-            console.log("email", email)
             await registerUserInDB({ uid, email });
 
             // Revalidate SWR user data after Google sign-in

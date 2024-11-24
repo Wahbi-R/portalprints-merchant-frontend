@@ -1,25 +1,25 @@
 "use client";
 
-export const dynamic = "force-dynamic"; // Prevent pre-rendering
-
 import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import { saveStoreData } from "@/hooks/useSaveStoreData";
+import { useStore } from "@/context/StoreContext";
 
 export default function ShopifyPage() {
   const searchParams = useSearchParams();
+  const { storeName, setStoreName } = useStore();
 
   useEffect(() => {
     const shop = searchParams.get("shop");
     const accessToken = searchParams.get("accessToken");
-
     // Handle missing parameters
     if (!shop || !accessToken) {
       console.error("Missing required parameters (shop or accessToken).");
       alert("Missing required parameters. Please check your URL and try again.");
       return;
     }
+    setStoreName(shop)
 
     const handleSaveStore = async () => {
       try {
@@ -35,7 +35,7 @@ export default function ShopifyPage() {
           });
 
           // Set timeout to avoid infinite waiting in edge cases
-          setTimeout(() => reject(new Error("Authentication timeout")), 10000);
+          setTimeout(() => reject(new Error("Authentication timeout")), 100000);
         });
 
         // Use saveStoreData to manage store saving logic
@@ -47,12 +47,17 @@ export default function ShopifyPage() {
 
         // Handle response cases
         if (response.exists) {
-          console.log("Store already exists:", response.store);
+          console.log("Store found:", response.store.store_domain);
         } else {
-          console.log("Store saved successfully:", response.store);
+          console.log("Store saved successfully:", response.store.store_domain);
         }
 
-        // Redirect to /settings after success
+        // Save storeDomain as a cookie (client-side only)
+        if (typeof document !== "undefined") {
+          document.cookie = `storeDomain=${shop}; Path=/; Max-Age=2592000; Secure; SameSite=Strict`;
+        }
+
+        // Redirect to /orders after success
         window.location.href = "/orders";
       } catch (error) {
         if (error.message === "Authentication timeout") {

@@ -9,10 +9,11 @@ import { useUserData } from '@/hooks/useUserData';
 import { useStoreDataNew } from '@/hooks/useStoreData'; // Hook to fetch and manage store data
 import { useEffect, useState } from 'react';
 import AddStoreButton from '../components/AddStoreButton';
+import { useStore } from '@/context/StoreContext';
 
 export default function SettingsPage() {
   const { user, isLoading } = useUserData();
-  const { storeData, isLoading: isStoreLoading, refreshStoreData } = useStoreDataNew(); // Fetch store data
+  const { storeName } = useStore(); // Fetch store data
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -40,12 +41,13 @@ export default function SettingsPage() {
 
           {/* Store Connection Section */}
           <div className="flex items-center space-x-2">
-            {!isStoreLoading && storeData.length === 0 ? (
+            {storeName === null || storeName === "" ? (
               <p className="text-gray-400">No connected stores. Add one to get started!</p> // Empty state message
             ) : (
-              storeData.map((store) => (
-                <StoreConnectionCard key={store.store_id} label={store.store_name || store.store_domain} />
-              ))
+              <StoreConnectionCard key={1} label={storeName} />
+              // storeData.map((store) => (
+              //   <StoreConnectionCard key={1} label={storeName} />
+              // ))
             )}
 
             {/* Add Store Button */}
@@ -55,7 +57,8 @@ export default function SettingsPage() {
           <h3 className="text-white text-xl font-bold mt-4">7 Day Winners</h3>
           <WinnersSection />
         </div>
-        <IntegrationSuggestions />
+        {/* dont show on shopify for the review duration */}
+        {/* <IntegrationSuggestions /> */}
       </div>
     </div>
   );

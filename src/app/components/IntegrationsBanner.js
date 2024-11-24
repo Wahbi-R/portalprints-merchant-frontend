@@ -15,13 +15,13 @@ export default function PromoBanner() {
       {/* Left side: Text */}
       <div className="p-6 space-y-4">
         <div>
-          <h2 className="text-4xl font-semibold">Get the very best apps for your store</h2>
-          <p className="text-2xl mt-1">Upgrade to the new checkout automation.</p>
+          <h2 className="text-4xl font-semibold">Dashboard</h2>
+          <p className="text-2xl mt-1">Start fulfilling your shopify orders</p>
         </div>
-        <button className="px-5 py-3 bg-orange-500 text-xl text-white rounded-full font-semibold hover:bg-orange-600 flex items-center">
+        {/* <button className="px-5 py-3 bg-orange-500 text-xl text-white rounded-full font-semibold hover:bg-orange-600 flex items-center">
           Find App
           <ArrowTopRightOnSquareIcon className="ml-2 h-6 w-6" aria-hidden="true"/>
-        </button>
+        </button> */}
       </div>
 
       {/* Right side: Button and Icons */}
@@ -39,7 +39,7 @@ export default function PromoBanner() {
             style={{ width: '70%', height: 'auto' }} // optional
           />
           </div>
-          <div className="bg-gray-800 rounded-full h-40 w-40 flex items-center justify-center">
+          {/* <div className="bg-gray-800 rounded-full h-40 w-40 flex items-center justify-center">
           <Image
             src="/etsy_logo.svg"
             width={0}
@@ -48,7 +48,7 @@ export default function PromoBanner() {
             alt="Etsy Icon"
             style={{ width: '100%', height: 'auto' }} // optional
           />
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

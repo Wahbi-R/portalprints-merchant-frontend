@@ -1,8 +1,7 @@
 import OrderRow from './OrderRow';
 
 export default function OrderTable({ orders }) {
-  console.log(orders);
-  if (orders.length === 0) {
+  if (orders?.length === 0) {
     return (
       <div className="text-center py-4 text-gray-500">
         <p>No orders found.</p>
@@ -16,18 +15,15 @@ export default function OrderTable({ orders }) {
         <thead className="text-xs uppercase bg-gray-100 text-gray-700">
           <tr>
             <th scope="col" className="px-6 py-3">Order</th>
-            <th scope="col" className="px-6 py-3">Shipment Receiver</th>
+            <th scope="col" className="px-6 py-3">Customer Name</th>
             <th scope="col" className="px-6 py-3">Date</th>
             <th scope="col" className="px-6 py-3">Status</th>
             <th scope="col" className="px-6 py-3">Total</th>
             <th scope="col" className="px-6 py-3">Portal Status</th>
-            {/* <th scope="col" className="px-6 py-3">Items</th> */}
-            {/* <th scope="col" className="px-6 py-3">Delivery Method</th> */}
           </tr>
         </thead>
         <tbody>
           {orders.map((order) => (
-            console.log(order[0]),
             <OrderRow key={order.external_order_name} order={order} />
           ))}
         </tbody>
@@ -35,3 +31,4 @@ export default function OrderTable({ orders }) {
     </div>
   );
 }
+

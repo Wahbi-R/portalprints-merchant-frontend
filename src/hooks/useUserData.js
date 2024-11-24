@@ -4,7 +4,6 @@ import { auth } from '@/lib/firebase';
 
 const preloadUserData = () => {
   if (typeof window !== "undefined") {
-    console.log("test")
     const cachedUser = localStorage.getItem('cachedUserData');
     return cachedUser ? JSON.parse(cachedUser) : null;
   }
