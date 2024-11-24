@@ -23,7 +23,7 @@ export default function OrderTable({ orders }) {
           </tr>
         </thead>
         <tbody>
-          {orders.map((order) => (
+          {orders?.map((order) => (
             <OrderRow key={order.external_order_name} order={order} />
           ))}
         </tbody>

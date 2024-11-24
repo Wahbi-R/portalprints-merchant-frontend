@@ -6,19 +6,53 @@ import StoreConnectionCard from '../components/StoreConnectionCard';
 import WinnersSection from '../components/WinningItemsSection';
 import IntegrationSuggestions from '../components/IntegrationsProfile';
 import { useUserData } from '@/hooks/useUserData';
-import { useStoreDataNew } from '@/hooks/useStoreData'; // Hook to fetch and manage store data
+import { useStore } from '@/context/StoreContext';
+import { fetchOrders } from '@/hooks/useOrdersData';
 import { useEffect, useState } from 'react';
 import AddStoreButton from '../components/AddStoreButton';
-import { useStore } from '@/context/StoreContext';
 
 export default function SettingsPage() {
   const { user, isLoading } = useUserData();
   const { storeName } = useStore(); // Fetch store data
   const [isClient, setIsClient] = useState(false);
+  const [orders, setOrders] = useState([]);
+  const [statusCounts, setStatusCounts] = useState({
+    shipped: 0,
+    readyForShipping: 0,
+    printing: 0,
+  });
 
   useEffect(() => {
     setIsClient(true); // Ensure this component renders client-side
   }, []);
+
+  useEffect(() => {
+    const loadOrders = async () => {
+      if (!storeName) return;
+
+      try {
+        const fetchedOrders = await fetchOrders(storeName);
+        setOrders(fetchedOrders);
+
+        // Calculate status counts
+        const shipped = fetchedOrders.filter(
+          (order) => order.order_status.toLowerCase() === "fulfilled"
+        ).length;
+        const readyForShipping = fetchedOrders.filter(
+          (order) => order.order_status.toLowerCase() === "partially_fulfilled"
+        ).length;
+        const printing = fetchedOrders.filter(
+          (order) => order.order_status.toLowerCase() === "unfulfilled"
+        ).length;
+
+        setStatusCounts({ shipped, readyForShipping, printing });
+      } catch (error) {
+        console.error("Error fetching orders:", error.message);
+      }
+    };
+
+    loadOrders();
+  }, [storeName]);
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6 bg-gray-900 w-full h-full">
@@ -26,9 +60,9 @@ export default function SettingsPage() {
       <div className="flex flex-col bg-gray-800 rounded-2xl space-y-2 p-2">
         <LogoCard logoURL={user?.profile_image_url} />
         <div className="flex space-x-4 justify-center">
-          <StatusCard label="Shipped" value="20" />
-          <StatusCard label="Ready for Shipping" value="8" />
-          <StatusCard label="Printing" value="15" />
+          <StatusCard label="Shipped" value={statusCounts.shipped} />
+          <StatusCard label="Ready for Shipping" value={statusCounts.readyForShipping} />
+          <StatusCard label="Printing" value={statusCounts.printing} />
         </div>
       </div>
 
@@ -45,19 +79,16 @@ export default function SettingsPage() {
               <p className="text-gray-400">No connected stores. Add one to get started!</p> // Empty state message
             ) : (
               <StoreConnectionCard key={1} label={storeName} />
-              // storeData.map((store) => (
-              //   <StoreConnectionCard key={1} label={storeName} />
-              // ))
             )}
 
             {/* Add Store Button */}
             {/* <AddStoreButton onStoreAdded={refreshStoreData} /> Refresh store data after adding */}
           </div>
 
-          <h3 className="text-white text-xl font-bold mt-4">7 Day Winners</h3>
-          <WinnersSection />
+          {/* <h3 className="text-white text-xl font-bold mt-4">Current Winners</h3>
+          <WinnersSection orders={orders} /> Pass orders to WinnersSection */}
         </div>
-        {/* dont show on shopify for the review duration */}
+        {/* Don't show on Shopify during review */}
         {/* <IntegrationSuggestions /> */}
       </div>
     </div>

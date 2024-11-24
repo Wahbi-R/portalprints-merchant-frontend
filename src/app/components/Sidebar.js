@@ -15,7 +15,7 @@ export default function Sidebar() {
 
   const navItems = [
     { name: 'Orders', path: '/orders', icon: ClipboardDocumentListIcon },
-    { name: 'Products', path: '/product', icon: InboxStackIcon },
+    { name: 'Products', path: '/products', icon: InboxStackIcon },
     // Add more items as needed
   ];
 
