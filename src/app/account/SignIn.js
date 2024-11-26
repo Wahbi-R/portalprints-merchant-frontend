@@ -93,9 +93,9 @@ export default function SignIn() {
                     {loading ? "Signing in..." : "Sign in"}
                 </button>
             </form>
-            <div className="">
+            {/* <div className="">
                 <GoogleSignInButton onClick={handleGoogleSignIn} />
-            </div>
+            </div> */}
         </div>
     );
 }

@@ -32,10 +32,10 @@ export default function AccountPage() {
                 </div>
 
                 {/* Right Side: Testimonial and Info Sheet - Hidden on Mobile */}
-                <div className="hidden md:flex flex-col justify-between bg-green-700 p-8 rounded-3xl space-y-6">
-                    <div>
-                        <h2 className="text-2xl font-bold">What our Clients Said:</h2>
-                    </div>
+                <div className="hidden md:flex flex-col justify-center items-center bg-green-700 p-8 rounded-3xl">
+                    {/* <div>
+                        <h2 className="text-2xl font-bold"></h2>
+                    </div> */}
                     <div>
                         <Image
                             src="/profile.png"
@@ -45,16 +45,16 @@ export default function AccountPage() {
                             height={0}
                             sizes="100vw" style={{ width: '100%', height: 'auto' }}
                         />
-                        <blockquote className="text-lg italic text-gray-200 ms-2">
-                            “Printing is poggers.”
-                        </blockquote>
-                        <p className="text-xl font-bold text-gray-300 ms-2">Sala&apos;s Mom</p>
-                        <p className="text-sm text-gray-300 ms-2">Product Designer & Seller @ Arieze</p>
+                        <p className="text-4xl text-center text-gray-200 ms-2 p-2">
+                            Unlock Effortless Business Growth.
+                        </p>
+                        {/* <p className="text-xl font-bold text-gray-300 ms-2">Sala&apos;s Mom</p>
+                        <p className="text-sm text-gray-300 ms-2">Product Designer & Seller @ Arieze</p> */}
                     </div>
-                    <div className="bg-white p-6 rounded-3xl text-black">
+                    {/* <div className="bg-white p-6 rounded-3xl text-black">
                         <h3 className="font-bold">Work smarter, not harder with Portal</h3>
                         <p className="text-sm">Be among the first to experience the best way to enhance your 3D Printing Business.</p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
