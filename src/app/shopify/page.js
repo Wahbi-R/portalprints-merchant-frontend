@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { auth } from "@/lib/firebase";
 import { saveStoreData } from "@/hooks/useSaveStoreData";
 import { useStore } from "@/context/StoreContext";
+import { registerUserInDB } from "@/lib/api";
 
 export default function ShopifyPage() {
   const searchParams = useSearchParams();
@@ -12,10 +13,10 @@ export default function ShopifyPage() {
 
   useEffect(() => {
     const shop = searchParams.get("shop");
-    const accessToken = searchParams.get("accessToken");
+    //const accessToken = searchParams.get("accessToken");
     // Handle missing parameters
-    if (!shop || !accessToken) {
-      console.error("Missing required parameters (shop or accessToken).");
+    if (!shop) {
+      console.error("Missing required parameters (shop).");
       alert("Missing required parameters. Please check your URL and try again.");
       return;
     }
@@ -33,16 +34,14 @@ export default function ShopifyPage() {
               console.log("Waiting for authentication...");
             }
           });
-
-          // Set timeout to avoid infinite waiting in edge cases
-          setTimeout(() => reject(new Error("Authentication timeout")), 100000);
         });
+        // save the users info to the db again in case anything changed
+        await registerUserInDB(auth.currentUser.uid, auth.currentUser.email)
 
         // Use saveStoreData to manage store saving logic
         const response = await saveStoreData({
           storeDomain: shop,
           storeName: null, // Leave store name as null
-          storeAccessToken: accessToken,
         });
 
         // Handle response cases

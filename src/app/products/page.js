@@ -56,7 +56,6 @@ export default function ProductsPage() {
         const fetchedVariants = await fetchVariants(fetchedProducts);
         const groupedProducts = groupProductsWithVariants(fetchedProducts, fetchedVariants);
 
-        console.log("Grouped Products with Variants:", groupedProducts);
 
         // Pass the grouped products to your table or filter
         setProductsList(groupedProducts);

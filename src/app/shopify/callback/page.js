@@ -15,8 +15,8 @@ export default function ShopifyCallbackPage() {
     const shop = searchParams.get("shop");
     const code = searchParams.get("code");
 
-    console.log("Shop:", shop);
-    console.log("Code:", code);
+    // console.log("Shop:", shop);
+    // console.log("Code:", code);
 
     if (!shop || !code) {
       console.error("Missing required parameters (shop or code).");
@@ -60,7 +60,7 @@ export default function ShopifyCallbackPage() {
         if (responseData.message === "Store already exists.") {
           alert("This store is already connected.");
         } else {
-          console.log("Store saved:", responseData);
+          // console.log("Store saved:", responseData);
         }
 
         // Redirect to /settings

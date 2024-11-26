@@ -13,9 +13,6 @@ export async function fetchProducts(storeDomain) {
         console.log("Waiting for authentication...");
       }
     });
-
-    // Set timeout to avoid infinite waiting in edge cases
-    setTimeout(() => reject(new Error("Authentication timeout")), 10000);
   });
 
   const token = await user.getIdToken();

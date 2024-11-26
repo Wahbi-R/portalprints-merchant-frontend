@@ -5,6 +5,7 @@ import { auth } from "@/lib/firebase";
 import { useStore } from "@/context/StoreContext";
 import { fetchProducts } from "@/hooks/useProductsData";
 import { fetchVariants } from "@/hooks/useVariantsData";
+import { groupProductsWithVariants } from "../page";
 
 export default function SyncProductsButton({ setProductsList }) {
   const [loading, setLoading] = useState(false);
@@ -53,14 +54,14 @@ export default function SyncProductsButton({ setProductsList }) {
       console.log("success")
     //   Fetch the updated products after syncing
     const updatedProducts = await fetchProducts(storeName);
-    console.log(updatedProducts);
     const variantsList = await fetchVariants(updatedProducts);
     //   const updatedProducts = await fetch(`/api/products?storeName=${storeName}`).then((res) =>
     //     res.json()
     //   );
 
     //   // Update the products list in the parent state
-    setProductsList(updatedProducts);
+    const productVariantList = groupProductsWithVariants(updatedProducts, variantsList)
+    setProductsList(productVariantList);
     } catch (error) {
       console.error("Error syncing products:", error.message);
     } finally {

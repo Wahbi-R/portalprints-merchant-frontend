@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signUp } from "../../lib/auth";
 import { registerUserInDB } from "@/lib/api";
 import { useUserData } from "@/hooks/useUserData";
+import { auth } from "@/lib/firebase";
 
 export default function SignUp() {
     const { refreshUser } = useUserData(); 
@@ -14,7 +15,8 @@ export default function SignUp() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
-
+    const searchParams = useSearchParams()
+    const shopName = searchParams.get("shop")
     const handleSignUp = async (e) => {
         e.preventDefault();
         setError(null);
@@ -33,9 +35,9 @@ export default function SignUp() {
             // Sign up with Firebase and get uid
             await signUp(email, password);
             const uid = auth.currentUser.uid;
-            const userEmail = auth.currentUser.email
+            const userEmail = auth.currentUser.email;
             // Register user in PostgreSQL database
-            await registerUserInDB({ uid, userEmail });
+            await registerUserInDB( uid, userEmail, shopName);
 
             // Refresh SWR user data to make it available globally
             await refreshUser(); 

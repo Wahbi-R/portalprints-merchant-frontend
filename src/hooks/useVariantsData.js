@@ -3,7 +3,7 @@
 import { auth } from "@/lib/firebase";
 
 export async function fetchVariants(products) {
-    console.log(products)
+    // console.log(products)
   const productIds = products.map((product) => product.product_id);
 
   const user = await new Promise((resolve, reject) => {

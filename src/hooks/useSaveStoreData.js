@@ -29,7 +29,6 @@ export async function saveStoreData(storeData) {
         userId: user.uid, // Use authenticated user's UID
         store_domain: storeData.storeDomain,
         store_name: storeData.storeName, // This can be `null` or a value
-        store_access_key: storeData.storeAccessToken,
       }),
     });
 

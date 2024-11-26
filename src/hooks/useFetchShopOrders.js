@@ -9,9 +9,9 @@ export function useFetchShopOrders() {
     const { storeData, isLoading: isStoreLoading, error: storeError } = useStoreDataNew();
   
     const fetchShopOrders = async () => {
-      console.log("fetchShopOrders invoked");
+      // console.log("fetchShopOrders invoked");
       if (storeError) {
-        console.log(storeData)
+        // console.log(storeData)
         setError("Store data is still loading or there was an error.");
         return;
       }

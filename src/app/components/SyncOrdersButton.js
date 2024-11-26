@@ -31,7 +31,6 @@ export default function SyncOrdersButton({ setOrdersList }) {
       if(!user.uid) {
         return;
       }
-      console.log("storeDomain:", storeName)
       const token = await user.getIdToken();
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shopify/getShopOrders`, {
         method: "POST",

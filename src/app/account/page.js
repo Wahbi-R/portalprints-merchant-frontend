@@ -1,7 +1,7 @@
-// src/app/account/page.js
 'use client';
 
 import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 import Image from "next/image";
@@ -9,19 +9,17 @@ import Image from "next/image";
 export default function AccountPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    const mode = searchParams.get("mode") || "signin"; // Default to "signin"
-
-    const isSignUp = mode === "signup";
+    const initialMode = searchParams.get("mode") || "signin"; // Default to "signin"
+    const [isSignUp, setIsSignUp] = useState(initialMode === "signup");
 
     const toggleMode = () => {
-        const newMode = isSignUp ? "signin" : "signup";
+        setIsSignUp((prev) => !prev);
     };
 
     return (
         <div className="flex justify-center items-center h-screen bg-background-gray">
             {/* Outer Container with rounded edges */}
             <div className="flex flex-col md:flex-row w-full h-screen bg-gray-900 text-white md:p-12 space-y-6 md:space-y-0 md:space-x-6">
-                
                 {/* Conditional Rendering of SignIn and SignUp Components */}
                 <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8 space-y-6">
                     {isSignUp ? <SignUp /> : <SignIn />}

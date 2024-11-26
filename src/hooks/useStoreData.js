@@ -24,7 +24,7 @@ export function useStoreData() {
       dedupingInterval: 60000,
       revalidateOnFocus: true,
     });
-    console.log(data)
+    // console.log(data)
     return {
       storeData: data || [], // Default to an empty array if no data is available
       isLoading: !data && !error,
