@@ -1,9 +1,6 @@
 export default function OrderRow({ order }) {
   const formatDate = (isoString) => {
     const date = new Date(isoString);
-    if(order.external_order_name === "#1007") {
-      console.log(order)
-    }
     return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(date);
   };
     return (
