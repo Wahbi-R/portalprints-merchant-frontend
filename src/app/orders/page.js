@@ -36,11 +36,17 @@ export default function OrdersPage({ ordersList, setOrdersList }) {
   // Filter orders when `status` changes
   useEffect(() => {
     const filtered =
-      status === "All"
-        ? ordersList
-        : ordersList.filter((order) =>
-            order.order_status?.toLowerCase() === status.toLowerCase()
+    status === "All"
+      ? ordersList
+      : ordersList.filter((order) => {
+          if (status.toLowerCase() === "cancelled") {
+            return order.cancelled_at !== null;
+          }
+          return (
+            order.order_status?.toLowerCase() === status.toLowerCase() &&
+            order.cancelled_at === null
           );
+        });
     setFilteredOrders(filtered);
     setCurrentPage(1); // Reset to first page when filters change
   }, [ordersList, status]);

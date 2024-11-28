@@ -8,13 +8,13 @@ export default function OrderRow({ order }) {
         <td className="px-6 py-4 font-medium text-gray-900">{order.external_order_name || ""}</td>
         <td className="px-6 py-4">{order.customer_name || "Not Listed"}</td>
         <td className="px-6 py-4">{formatDate(order.order_date) || ""}</td>
-        <td className="px-6 py-4">{order.order_status || ""}</td>
+        <td className="px-6 py-4">{order.cancelled_at !== null ? order.order_status + " AND CANCELLED" : order.order_status || ""}</td>
         <td className="px-6 py-4">{order.total_cost || 0.00}</td>
         <td className={`px-6 py-4 font-semibold ${
-          order.paymentStatus === "Completed" ? "text-green-500" :
-          order.paymentStatus === "Pending" ? "text-yellow-500" : "text-red-500"
+          order.portal_order_status === "Completed" ? "text-green-500" :
+          order.portal_order_status === "Pending" ? "text-yellow-500" : "text-red-500"
         }`}>
-          {order.paymentStatus || "Printing"}
+          {order.portal_order_status || "Printing"}
         </td>
         {/* <td className="px-6 py-4">{order.items.count || ""}</td> */}
         {/* <td className="px-6 py-4">N/A</td> */}

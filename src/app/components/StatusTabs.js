@@ -4,9 +4,8 @@ export default function StatusTabs({ onStatusChange }) {
   const statuses = [
     "All",
     "Unfulfilled",
-    "Partially fulfilled",
-    "Scheduled",
-    "Completed",
+    "Partially Fulfilled",
+    "Fulfilled",
     "Cancelled",
   ];
   const [selectedStatus, setSelectedStatus] = useState("All");
