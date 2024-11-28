@@ -1,6 +1,9 @@
 export default function OrderRow({ order }) {
   const formatDate = (isoString) => {
     const date = new Date(isoString);
+    if(order.external_order_name === "#1007") {
+      console.log(order)
+    }
     return new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" }).format(date);
   };
     return (
@@ -14,7 +17,9 @@ export default function OrderRow({ order }) {
           order.portal_order_status === "Completed" ? "text-green-500" :
           order.portal_order_status === "Pending" ? "text-yellow-500" : "text-red-500"
         }`}>
-          {order.portal_order_status || order.cancelled_at ? "Cancelled" : "Printing"}
+          {order.cancelled_at !== null
+  ? "Cancelled"
+  : order.portal_order_status || "Printing"}
         </td>
         {/* <td className="px-6 py-4">{order.items.count || ""}</td> */}
         {/* <td className="px-6 py-4">N/A</td> */}
