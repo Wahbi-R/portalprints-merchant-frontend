@@ -11,6 +11,7 @@ import SyncOrdersButton from "../components/SyncOrdersButton";
 export default function OrdersPage({ ordersList, setOrdersList }) {
   const [filteredOrders, setFilteredOrders] = useState([]);
   const [status, setStatus] = useState("All");
+  const [sortOrder, setSortOrder] = useState("asc"); // Manage sort order
   const [currentPage, setCurrentPage] = useState(1);
   const ordersPerPage = 5;
   const maxPageButtons = 5;
@@ -23,8 +24,8 @@ export default function OrdersPage({ ordersList, setOrdersList }) {
 
       try {
         const fetchedOrders = await fetchOrders(storeName);
-        setOrdersList(fetchedOrders); 
-        setFilteredOrders(fetchedOrders); 
+        setOrdersList(fetchedOrders);
+        setFilteredOrders(fetchedOrders);
       } catch (error) {
         console.error("Error fetching orders:", error.message);
       }
@@ -33,23 +34,39 @@ export default function OrdersPage({ ordersList, setOrdersList }) {
     loadOrders();
   }, [storeName, setOrdersList]);
 
-  // Filter orders when `status` changes
+  // Filter and sort orders when `status` or `sortOrder` changes
   useEffect(() => {
-    const filtered =
-    status === "All"
-      ? ordersList
-      : ordersList.filter((order) => {
-          if (status.toLowerCase() === "cancelled") {
-            return order.cancelled_at !== null;
-          }
-          return (
-            order.order_status?.toLowerCase() === status.toLowerCase() &&
-            order.cancelled_at === null
-          );
-        });
-    setFilteredOrders(filtered);
-    setCurrentPage(1); // Reset to first page when filters change
-  }, [ordersList, status]);
+    let filtered =
+      status === "All"
+        ? ordersList
+        : ordersList.filter((order) => {
+            if (status.toLowerCase() === "cancelled") {
+              return order.cancelled_at !== null;
+            }
+            if (status.toLowerCase() === "partially fulfilled") {
+              return (
+                order.order_status?.toLowerCase() === "partially_fulfilled" &&
+                order.cancelled_at === null
+              );
+            }
+            return (
+              order.order_status?.toLowerCase() === status.toLowerCase() &&
+              order.cancelled_at === null
+            );
+          });
+
+    // Sort orders by order number
+    filtered = [...filtered].sort((a, b) => {
+      const orderNumberA = parseInt(a.external_order_name.replace("#", ""), 10);
+      const orderNumberB = parseInt(b.external_order_name.replace("#", ""), 10);
+      return sortOrder === "asc"
+        ? orderNumberA - orderNumberB
+        : orderNumberB - orderNumberA;
+    });
+
+    setFilteredOrders(filtered); // Set filtered and sorted orders
+    setCurrentPage(1); // Reset to the first page when filters change
+  }, [ordersList, status, sortOrder]);
 
   // Paginate filtered orders
   const indexOfLastOrder = currentPage * ordersPerPage;
@@ -74,8 +91,8 @@ export default function OrdersPage({ ordersList, setOrdersList }) {
   // Handle search
   const handleSearch = (searchTerm) => {
     const filtered = ordersList.filter((order) => {
-      const customerName = order.customer_name?.toLowerCase() || ""; 
-      const externalOrderName = order.external_order_name?.toLowerCase() || ""; 
+      const customerName = order.customer_name?.toLowerCase() || "";
+      const externalOrderName = order.external_order_name?.toLowerCase() || "";
 
       return (
         customerName.includes(searchTerm.toLowerCase()) ||
@@ -84,17 +101,14 @@ export default function OrdersPage({ ordersList, setOrdersList }) {
     });
 
     setFilteredOrders(filtered);
-    setCurrentPage(1); 
+    setCurrentPage(1);
   };
 
   // Generate dynamic pagination buttons
   const getPageNumbers = () => {
     const pageNumbers = [];
     const startPage = Math.max(1, currentPage - Math.floor(maxPageButtons / 2));
-    const endPage = Math.min(
-      totalPages,
-      startPage + maxPageButtons - 1
-    );
+    const endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
 
     for (let i = startPage; i <= endPage; i++) {
       pageNumbers.push(i);
@@ -112,7 +126,7 @@ export default function OrdersPage({ ordersList, setOrdersList }) {
       </div>
       <StatusTabs onStatusChange={handleStatusChange} />
       <SearchBar onSearch={handleSearch} />
-      <OrderTable orders={currentPageOrders} />
+      <OrderTable orders={currentPageOrders} setSortOrder={setSortOrder} />
       {/* Pagination */}
       <div className="flex items-center space-x-2 mt-4 overflow-x-auto">
         <button
@@ -148,7 +162,7 @@ export default function OrdersPage({ ordersList, setOrdersList }) {
           className="px-4 py-2 rounded bg-gray-200 text-gray-800"
           onClick={() => handlePageChange(currentPage + 1)}
           disabled={currentPage === totalPages}
-          hidden={currentPage >= totalPages-1}
+          hidden={currentPage >= totalPages - 1}
         >
           Next
         </button>

@@ -14,7 +14,7 @@ export default function OrderRow({ order }) {
           order.portal_order_status === "Completed" ? "text-green-500" :
           order.portal_order_status === "Pending" ? "text-yellow-500" : "text-red-500"
         }`}>
-          {order.portal_order_status || "Printing"}
+          {order.portal_order_status || order.cancelled_at ? "Cancelled" : "Printing"}
         </td>
         {/* <td className="px-6 py-4">{order.items.count || ""}</td> */}
         {/* <td className="px-6 py-4">N/A</td> */}
