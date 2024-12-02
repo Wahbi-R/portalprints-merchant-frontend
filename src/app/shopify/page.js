@@ -37,7 +37,6 @@ export default function ShopifyPage() {
         });
         // save the users info to the db again in case anything changed
         await registerUserInDB(auth.currentUser.uid, auth.currentUser.email)
-
         // Use saveStoreData to manage store saving logic
         const response = await saveStoreData({
           storeDomain: shop,

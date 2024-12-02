@@ -28,7 +28,7 @@ export default function OrdersLayout() {
     },
     {
       title: "Orders Completed",
-      value: ordersList.filter((order) => order.order_status === "COMPLETED").length,
+      value: ordersList.filter((order) => order.order_status === "COMPLETED" || order.order_status === "FULFILLED").length,
       icon: CheckBadgeIcon,
     },
   ];

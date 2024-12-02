@@ -11,18 +11,24 @@ const preloadUserData = () => {
 };
 
 const fetcher = async (url) => {
-  if (typeof window !== "undefined" && auth.currentUser) {
-    const token = await auth.currentUser.getIdToken();
-    const res = await fetch(url, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-
-    if (!res.ok) throw new Error("Failed to fetch user data");
-    const data = await res.json();
-    localStorage.setItem('cachedUserData', JSON.stringify(data));
-    return data;
+  if (!auth.currentUser) {
+    console.warn("User is not authenticated yet.");
+    return null; // Prevent fetching if not authenticated
   }
-  return null;
+
+  const token = await auth.currentUser.getIdToken();
+  const res = await fetch(url, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+
+  if (!res.ok) {
+    console.error("Failed to fetch user data:", res.status);
+    return null;
+  }
+
+  const data = await res.json();
+  localStorage.setItem('cachedUserData', JSON.stringify(data));
+  return data;
 };
 
 export function useUserData() {
@@ -39,12 +45,15 @@ export function useUserData() {
   }, []);
 
   const { data, error, mutate } = useSWR(
-    isAuthInitialized ? `${process.env.NEXT_PUBLIC_API_URL}/api/users/profile` : null,
+    isAuthInitialized && auth.currentUser
+      ? `${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`
+      : null,
     fetcher,
     {
       initialData,
       revalidateOnMount: isAuthInitialized,
-      compare: (currentData, newData) => JSON.stringify(currentData) === JSON.stringify(newData),
+      compare: (currentData, newData) =>
+        JSON.stringify(currentData) === JSON.stringify(newData),
     }
   );
 

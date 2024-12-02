@@ -33,10 +33,19 @@ export async function saveStoreData(storeData) {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to save store data: ${response.statusText}`);
+      // Handle non-successful HTTP status codes
+      const errorText = await response.text();
+      throw new Error(`Failed to save store data: ${response.statusText}. ${errorText}`);
     }
 
-    const responseData = await response.json();
+    // Safely check if the response body is JSON
+    const text = await response.text(); // Fetch the raw response text
+    if (!text) {
+      console.log("Empty response body received.");
+      return { exists: false, store: null }; // Return a default response
+    }
+
+    const responseData = JSON.parse(text); // Parse the JSON response
 
     if (responseData.message === "Store already exists.") {
       return { exists: true, store: responseData.store }; // Return info about the existing store
