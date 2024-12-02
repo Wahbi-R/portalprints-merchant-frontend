@@ -45,7 +45,7 @@ export default function ProductsFilter({ originalProducts = [], setFilteredProdu
           onChange={(e) => setSearchQuery(e.target.value)}
           className="flex-grow px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-blue-300"
         />
-        <select
+        {/* <select
           value={category}
           onChange={(e) => setCategory(e.target.value)}
           className="px-4 py-2 border border-gray-300 rounded-lg"
@@ -66,7 +66,7 @@ export default function ProductsFilter({ originalProducts = [], setFilteredProdu
               {storeName}
             </option>
           ))}
-        </select>
+        </select> */}
         <button
           onClick={resetFilters}
           className="px-4 py-2 bg-gray-300 text-gray-800 rounded-lg hover:bg-gray-400"
