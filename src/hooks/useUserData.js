@@ -22,7 +22,7 @@ const fetcher = async (url) => {
   });
 
   if (!res.ok) {
-    console.error("Failed to fetch user data:", res.status);
+    console.log("Failed to fetch user data:", res.status);
     return null;
   }
 
