@@ -123,7 +123,7 @@ export default function SettingsPage() {
     {/* Store Connection Section */}
     <div className="flex items-center space-x-2">
       {storeName === null || storeName === '' ? (
-        <p className="text-gray-400">No connected stores. Add one to get started!</p>
+        <p className="text-gray-400">You may not have any stores connected. Add one to get started!</p>
       ) : (
         <StoreConnectionCard key={1} label={storeName} />
       )}

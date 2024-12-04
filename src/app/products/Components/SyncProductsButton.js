@@ -51,7 +51,7 @@ export default function SyncProductsButton({ setProductsList }) {
       if (!response.ok) {
         throw new Error(`Failed to sync products: ${response.statusText}`);
       }
-      console.log("success")
+      console.log("Products synced Successfully")
     //   Fetch the updated products after syncing
     const updatedProducts = await fetchProducts(storeName);
     const variantsList = await fetchVariants(updatedProducts);

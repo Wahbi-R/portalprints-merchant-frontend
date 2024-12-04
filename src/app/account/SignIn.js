@@ -30,8 +30,6 @@ export default function SignIn() {
             // Sign in with Firebase and get uid
             await signIn(email, password);
             const uid = auth.currentUser.uid;
-            console.log("test")
-            console.log(shopName)
             // save the user in the database if they aren't (just in case for previously made accounts)
             await registerUserInDB({ uid, email, shopName });
             
