@@ -1,6 +1,17 @@
+import { useStore } from "@/context/StoreContext";
+import { useAddProduct } from "@/hooks/useAddProduct";
+import { CheckCircleIcon, PlusCircleIcon } from "@heroicons/react/24/outline";
 import React from "react";
 
-export default function ProductsTable({ products = [] }) {
+export default function ProductsTable({ products = [], userStoreProducts = [] }) {
+  const { addProduct, isLoading: isAddingProduct } = useAddProduct();
+  const { storeName, setStoreName } = useStore();
+
+  // Check if a product is already in the store
+  const isProductInStore = (productId) => {
+    return userStoreProducts.some((storeProduct) => storeProduct.product_id === productId);
+  };
+
   if (products.length === 0) {
     return (
       <div className="text-center py-4 text-gray-500">
@@ -18,6 +29,7 @@ export default function ProductsTable({ products = [] }) {
             <th scope="col" className="px-6 py-3">Price</th>
             <th scope="col" className="px-6 py-3">Description</th>
             <th scope="col" className="px-6 py-3">Variant Info</th>
+            <th scope="col" className="px-6 py-3">Add to Store</th>
           </tr>
         </thead>
         <tbody>
@@ -38,6 +50,8 @@ export default function ProductsTable({ products = [] }) {
                   minPrice === maxPrice ? `${minPrice.toFixed(2)}` : `$${minPrice.toFixed(2)} - $${maxPrice.toFixed(2)}`;
               }
             }
+
+            const productInStore = isProductInStore(product.product_id);
 
             return (
               <React.Fragment key={product.product_id}>
@@ -60,6 +74,23 @@ export default function ProductsTable({ products = [] }) {
                   <td className="px-6 py-4">
                     {hasMultipleVariants ? `${product.variants.length} Variants` : "No Variants"}
                   </td>
+                  <td className="px-6 py-4 text-center">
+                    {productInStore ? (
+                      <CheckCircleIcon className="w-6 h-6 text-green-500" />
+                    ) : (
+                      <button
+                        onClick={() =>
+                          addProduct({ storeDomain: storeName, productId: product.product_id })
+                        }
+                        disabled={isAddingProduct}
+                        className={`text-blue-500 hover:text-blue-700 flex justify-center items-center ${
+                          isAddingProduct ? "cursor-not-allowed opacity-50" : ""
+                        }`}
+                      >
+                        <PlusCircleIcon className="w-6 h-6" />
+                      </button>
+                    )}
+                  </td>
                 </tr>
 
                 {/* Variant Rows */}
@@ -74,6 +105,7 @@ export default function ProductsTable({ products = [] }) {
                       </td>
                       <td className="px-6 py-4">${variant.price || "N/A"}</td>
                       <td className="px-6 py-4">Variant of {product.name}</td>
+                      <td className="px-6 py-4">{"N/A"}</td>
                       <td className="px-6 py-4">{"N/A"}</td>
                     </tr>
                   ))}

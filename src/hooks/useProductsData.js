@@ -19,6 +19,7 @@ export async function fetchProducts(storeDomain) {
   const url = new URL(`${process.env.NEXT_PUBLIC_API_URL}/api/products`);
   url.searchParams.append("uid", user.uid);
   url.searchParams.append("storeDomain", storeDomain);
+  url.searchParams.append("vendor", "Portal")
 
   const response = await fetch(url.toString(), {
     method: "GET",
