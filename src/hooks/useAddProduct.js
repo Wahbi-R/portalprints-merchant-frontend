@@ -5,11 +5,12 @@ export function useAddProduct() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const addProduct = async ({ storeDomain, productId }) => {
+  const addProduct = async ({ storeDomain, product, name, description, margin, variants }) => {
     setIsLoading(true);
     setError(null);
 
     try {
+      if (isLoading) return; // debounce
       // Get the authenticated user
       const user = await new Promise((resolve, reject) => {
         const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -23,6 +24,7 @@ export function useAddProduct() {
       });
 
       const token = await user.getIdToken();
+      console.log("nd", name, description);
 
       // Make the API call
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/shopify/addProduct`, {
@@ -34,7 +36,10 @@ export function useAddProduct() {
         body: JSON.stringify({
           uid: user.uid, // User ID from Firebase
           storeDomain: storeDomain,   // Shopify store domain
-          product_id: productId,     // ID of the product from your database
+          product_id: product.product_id,     // ID of the product from your database
+          // TODO: Variants to use
+          name,
+          description,
         }),
       });
 
