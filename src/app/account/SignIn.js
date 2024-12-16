@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { signIn, signInWithGoogle } from "../../lib/auth";
 import { registerUserInDB } from "../../lib/api";
 import GoogleSignInButton from "../components/GoogleSignInButton";
@@ -13,6 +13,8 @@ export default function SignIn() {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
+    const searchParams = useSearchParams()
+    const shopName = searchParams.get("shop")
 
     const handleSignIn = async (e) => {
         e.preventDefault();
@@ -28,9 +30,8 @@ export default function SignIn() {
             // Sign in with Firebase and get uid
             await signIn(email, password);
             const uid = auth.currentUser.uid;
-
             // save the user in the database if they aren't (just in case for previously made accounts)
-            await registerUserInDB({ uid, email });
+            await registerUserInDB({ uid, email, shopName });
             
             // Revalidate SWR user data after sign-in
             refreshUser();
@@ -51,7 +52,6 @@ export default function SignIn() {
             await signInWithGoogle();
             const uid = auth.currentUser.uid;
             const email = auth.currentUser.email;
-            console.log("email", email)
             await registerUserInDB({ uid, email });
 
             // Revalidate SWR user data after Google sign-in
@@ -91,9 +91,9 @@ export default function SignIn() {
                     {loading ? "Signing in..." : "Sign in"}
                 </button>
             </form>
-            <div className="">
+            {/* <div className="">
                 <GoogleSignInButton onClick={handleGoogleSignIn} />
-            </div>
+            </div> */}
         </div>
     );
 }

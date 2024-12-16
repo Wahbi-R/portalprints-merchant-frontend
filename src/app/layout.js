@@ -7,6 +7,7 @@ import NavigationSidebar from "./components/Sidebar";
 import ProtectedRoute from './components/ProtectedRoute'; 
 import { AuthProvider } from "@/context/AuthContext";
 import { useRouter } from "next/navigation";
+import { StoreProvider } from "@/context/StoreContext";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,15 +32,17 @@ export default function RootLayout({ children }) {
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <AuthProvider>
             <ProtectedRoute >
-              <div className="flex h-screen max-w-full overflow-x-hidden">
-                <NavigationSidebar /> {/* Sidebar on the left */}
-                <div className="flex flex-col w-full">
-                  <Header /> {/* Sticky Header */}
-                  <main className="flex-grow bg-white max-w-full overflow-x-hidden">
-                    {children}
-                  </main>
+              <StoreProvider>
+                <div className="flex h-screen max-w-full overflow-x-hidden">
+                  <NavigationSidebar /> {/* Sidebar on the left */}
+                  <div className="flex flex-col w-full">
+                    <Header /> {/* Sticky Header */}
+                    <main className="flex-grow bg-white max-w-full overflow-x-hidden">
+                      {children}
+                    </main>
+                  </div>
                 </div>
-              </div>
+              </StoreProvider>
             </ProtectedRoute>
         </AuthProvider>
       </body>
